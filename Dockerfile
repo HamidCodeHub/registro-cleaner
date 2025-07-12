@@ -8,11 +8,12 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
-# ── STAGE 2: Run on a slim JRE 21 image ────────────────────────────────
+# ── STAGE 2: Runtime with a slim JRE ────────────────────────────────
 FROM eclipse-temurin:21-jre-alpine
 
-USER appuser
 WORKDIR /app
 COPY --from=builder /workspace/target/registro-cleaner-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
+
